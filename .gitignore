@@ -1,0 +1,11 @@
+node_modules/
+node_modules
+main.js
+*.map
+data.json
+sync-logs/
+.DS_Store
+AGENTS.md
+CLAUDE.md
+HANDOFF.md
+graphify-out/
