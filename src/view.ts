@@ -3,14 +3,7 @@ import type DittoPlugin from './main'
 import { VIEW_TYPE, TAG_VIEW_TYPE } from './constants'
 import { HighlightRecord, Mode, ViewPreferences } from './types'
 import { groupHighlights, matchesCategories, matchesSection, matchesTags, normalizeTag, sectionTags, sortHighlights } from './query'
-
-const callout = (record: HighlightRecord, body: string): string => {
-	const attribution = record.sourcePath
-		? `[[${record.sourcePath.replace(/\.md$/, '')}|${record.source}]]`
-		: record.source
-	const quoted = body.split('\n').map(line => line ? `> ${line}` : '>').join('\n')
-	return `> [!quote] ${attribution}\n${quoted}\n> [[${record.id}|]]`
-}
+import { formatCallout } from './callout'
 
 class TagPicker extends SuggestModal<{tag: string; count: number}> {
 	constructor(private plugin: DittoPlugin) { super(plugin.app); this.setPlaceholder('Search highlight tags') }
@@ -229,7 +222,7 @@ export class DittoView extends ItemView {
 			const actions = card.createDiv('ditto-actions')
 			this.action(actions, 'external-link', 'Open highlight', () => this.openFile(record.path))
 			if (record.sourcePath) this.action(actions, 'book-open', 'Open source', () => this.openFile(record.sourcePath!))
-			this.action(actions, 'copy', 'Copy as callout', () => { void navigator.clipboard.writeText(callout(record, body)).then(() => new Notice('Copied callout')).catch(() => new Notice('Could not copy callout')) })
+			this.action(actions, 'copy', 'Copy as callout', () => { void navigator.clipboard.writeText(formatCallout(record, body)).then(() => new Notice('Copied callout')).catch(() => new Notice('Could not copy callout')) })
 			if (record.tags.length) actions.createSpan({ text: record.tags.map(tag => `#${tag}`).join(' '), cls: 'ditto-card-tags' })
 			if (record.readwiseId) actions.createSpan({ text: `Readwise ${record.readwiseId}`, cls: 'ditto-readwise-id' })
 		} catch (error) {

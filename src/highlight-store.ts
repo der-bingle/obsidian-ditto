@@ -18,6 +18,7 @@ export const projectHighlight = (app: App, file: TFile, cache: CachedMetadata): 
 	const sourceName = book ? displayText(book) : title
 	const source = sourceName ? (author && !sourceName.includes(author) ? `${author}, ${sourceName}` : sourceName) : author || 'Unknown Source'
 	const sourceLink = book || title
+	const attributionLink = book.startsWith('[[') ? book : authors[0]?.startsWith('[[') ? authors[0] : null
 	const candidate = sourceLink ? app.metadataCache.getFirstLinkpathDest(linkText(sourceLink), file.path) : null
 	const sourceMetadata = candidate ? app.metadataCache.getFileCache(candidate)?.frontmatter : null
 	const isArticleNote = !sourceMetadata?.highlighted && (sourceMetadata?.type === 'article' || typeof sourceMetadata?.source === 'string')
@@ -28,6 +29,7 @@ export const projectHighlight = (app: App, file: TFile, cache: CachedMetadata): 
 		path: file.path,
 		source,
 		attribution: book ? displayText(book) : author,
+		attributionLink,
 		sourcePath,
 		readwiseId: typeof frontmatter.readwise === 'string' || typeof frontmatter.readwise === 'number' ? String(frontmatter.readwise) : null,
 		isBook: !!book,
