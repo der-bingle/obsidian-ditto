@@ -7,6 +7,7 @@ export interface HighlightRecord {
 	readonly source: string
 	readonly attribution: string
 	readonly sourcePath: string | null
+	readonly readwiseId: string | null
 	readonly isBook: boolean
 	readonly highlightedMs: number | null
 	readonly tags: ReadonlyArray<string>

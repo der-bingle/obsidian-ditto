@@ -17,7 +17,7 @@ export const projectHighlight = (app: App, file: TFile, cache: CachedMetadata): 
 	const title = typeof frontmatter.title === 'string' ? frontmatter.title : ''
 	const sourceName = book ? displayText(book) : title
 	const source = sourceName ? (author && !sourceName.includes(author) ? `${author}, ${sourceName}` : sourceName) : author || 'Unknown Source'
-	const sourceLink = book || (authors[0]?.startsWith('[[') ? authors[0] : '')
+	const sourceLink = book || title
 	const sourcePath = sourceLink ? app.metadataCache.getFirstLinkpathDest(linkText(sourceLink), file.path)?.path || null : null
 	const rawDate = typeof frontmatter.highlighted === 'string' ? Date.parse(frontmatter.highlighted) : NaN
 	return {
@@ -26,6 +26,7 @@ export const projectHighlight = (app: App, file: TFile, cache: CachedMetadata): 
 		source,
 		attribution: book ? displayText(book) : author,
 		sourcePath,
+		readwiseId: typeof frontmatter.readwise === 'string' || typeof frontmatter.readwise === 'number' ? String(frontmatter.readwise) : null,
 		isBook: !!book,
 		highlightedMs: Number.isFinite(rawDate) ? rawDate : null,
 		tags: [...new Set((getAllTags(cache) || []).map(normalizeTag))],

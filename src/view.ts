@@ -6,8 +6,8 @@ import { groupHighlights, matchesCategories, matchesSection, matchesTags, normal
 
 const callout = (record: HighlightRecord, body: string): string => {
 	const attribution = record.sourcePath
-		? `[[${record.sourcePath.replace(/\.md$/, '')}|${record.attribution || record.source}]]`
-		: record.attribution || record.source
+		? `[[${record.sourcePath.replace(/\.md$/, '')}|${record.source}]]`
+		: record.source
 	const quoted = body.split('\n').map(line => line ? `> ${line}` : '>').join('\n')
 	return `> [!quote] ${attribution}\n${quoted}\n> [[${record.id}|]]`
 }
@@ -89,7 +89,12 @@ export class DittoView extends ItemView {
 	async refresh(): Promise<void> {
 		this.dirty = true
 		const generation = ++this.generation
-		if (!this.contentEl.isShown()) return
+		if (!this.contentEl.isShown()) {
+			this.renderComponent?.unload()
+			this.renderComponent = null
+			this.contentEl.empty()
+			return
+		}
 		this.renderComponent?.unload()
 		this.renderComponent = new Component()
 		this.renderComponent.load()
@@ -226,6 +231,7 @@ export class DittoView extends ItemView {
 			if (record.sourcePath) this.action(actions, 'book-open', 'Open source', () => this.openFile(record.sourcePath!))
 			this.action(actions, 'copy', 'Copy as callout', () => { void navigator.clipboard.writeText(callout(record, body)).then(() => new Notice('Copied callout')).catch(() => new Notice('Could not copy callout')) })
 			if (record.tags.length) actions.createSpan({ text: record.tags.map(tag => `#${tag}`).join(' '), cls: 'ditto-card-tags' })
+			if (record.readwiseId) actions.createSpan({ text: `Readwise ${record.readwiseId}`, cls: 'ditto-readwise-id' })
 		} catch (error) {
 			if (generation !== this.generation) return
 			console.error('Ditto could not render highlight', record.path, error)

@@ -211,6 +211,12 @@
 	overflow-wrap: anywhere;
 }
 
+.ditto-readwise-id {
+	color: var(--text-faint);
+	font-size: var(--font-ui-smaller);
+	overflow-wrap: anywhere;
+}
+
 .ditto-state {
 	padding: 0.75rem 0;
 	color: var(--text-muted);
