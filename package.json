@@ -1,6 +1,6 @@
 {
   "name": "obsidian-ditto",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Find highlights by Scripture passage or tags in two sidebar views.",
   "main": "main.js",
   "scripts": {

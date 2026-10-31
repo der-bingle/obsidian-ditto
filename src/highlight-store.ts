@@ -18,7 +18,10 @@ export const projectHighlight = (app: App, file: TFile, cache: CachedMetadata): 
 	const sourceName = book ? displayText(book) : title
 	const source = sourceName ? (author && !sourceName.includes(author) ? `${author}, ${sourceName}` : sourceName) : author || 'Unknown Source'
 	const sourceLink = book || title
-	const sourcePath = sourceLink ? app.metadataCache.getFirstLinkpathDest(linkText(sourceLink), file.path)?.path || null : null
+	const candidate = sourceLink ? app.metadataCache.getFirstLinkpathDest(linkText(sourceLink), file.path) : null
+	const sourceMetadata = candidate ? app.metadataCache.getFileCache(candidate)?.frontmatter : null
+	const isArticleNote = !sourceMetadata?.highlighted && (sourceMetadata?.type === 'article' || typeof sourceMetadata?.source === 'string')
+	const sourcePath = candidate && (book || isArticleNote) ? candidate.path : null
 	const rawDate = typeof frontmatter.highlighted === 'string' ? Date.parse(frontmatter.highlighted) : NaN
 	return {
 		id: file.basename,
