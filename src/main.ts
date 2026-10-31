@@ -104,7 +104,8 @@ export default class DittoPlugin extends Plugin {
 		const type = mode === 'scripture' ? VIEW_TYPE : TAG_VIEW_TYPE
 		let leaf = this.app.workspace.getLeavesOfType(type)[0]
 		if (!leaf) {
-			leaf = this.app.workspace.getRightLeaf(true) as WorkspaceLeaf
+			// Reuse the right tab group; splitting it places Ditto below the other tabs.
+			leaf = this.app.workspace.getRightLeaf(false) as WorkspaceLeaf
 			await leaf.setViewState({ type, active: true })
 		}
 		await this.app.workspace.revealLeaf(leaf)
