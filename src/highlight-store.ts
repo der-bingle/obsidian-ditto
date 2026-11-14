@@ -23,14 +23,20 @@ export const projectHighlight = (app: App, file: TFile, cache: CachedMetadata): 
 	const sourceMetadata = candidate ? app.metadataCache.getFileCache(candidate)?.frontmatter : null
 	const isArticleNote = !sourceMetadata?.highlighted && (sourceMetadata?.type === 'article' || typeof sourceMetadata?.source === 'string')
 	const sourcePath = candidate && (book || isArticleNote) ? candidate.path : null
+	const bookTitle = typeof sourceMetadata?.title === 'string' && book ? sourceMetadata.title : ''
+	// Book links read `Author, Title`; drop the author so the group heading can show each on its own line.
+	const strippedName = author && sourceName.startsWith(`${author}, `) ? sourceName.slice(author.length + 2) : sourceName
 	const rawDate = typeof frontmatter.highlighted === 'string' ? Date.parse(frontmatter.highlighted) : NaN
 	return {
 		id: file.basename,
 		path: file.path,
 		source,
+		author,
+		title: bookTitle || strippedName,
 		attribution: book ? displayText(book) : author,
 		attributionLink,
 		sourcePath,
+		sourceType: typeof frontmatter.type === 'string' && frontmatter.type.trim() ? frontmatter.type.trim().toLowerCase() : book ? 'book' : null,
 		readwiseId: typeof frontmatter.readwise === 'string' || typeof frontmatter.readwise === 'number' ? String(frontmatter.readwise) : null,
 		isBook: !!book,
 		highlightedMs: Number.isFinite(rawDate) ? rawDate : null,
@@ -73,7 +79,9 @@ export class HighlightStore {
 	}
 
 	async ensureReady(): Promise<void> {
-		if (!this.ready) this.ready = this.build()
+		// Store the promise before build starts: a small folder builds synchronously and its
+		// change notice refreshes the views, which would call back in here and recurse.
+		if (!this.ready) this.ready = Promise.resolve().then(() => this.build())
 		await this.ready
 	}
 

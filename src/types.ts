@@ -5,9 +5,13 @@ export interface HighlightRecord {
 	readonly id: string
 	readonly path: string
 	readonly source: string
+	readonly author: string
+	readonly title: string
 	readonly attribution: string
 	readonly attributionLink: string | null
 	readonly sourcePath: string | null
+	// The highlight's `type`: book, article, sermon, video, email, or null when unknown
+	readonly sourceType: string | null
 	readonly readwiseId: string | null
 	readonly isBook: boolean
 	readonly highlightedMs: number | null

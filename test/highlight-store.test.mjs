@@ -35,3 +35,16 @@ test('books and identified article notes remain valid source links', () => {
   assert.equal(project({ book: '[[Karen Jobes, Esther]]' }, { path: 'Library/Books/Karen Jobes, Esther.md' }).sourcePath, 'Library/Books/Karen Jobes, Esther.md')
   assert.equal(project({ title: 'An Article' }, { path: 'Library/Articles/An Article.md', cache: { frontmatter: {type: 'article', source: 'https://example.com'} } }).sourcePath, 'Library/Articles/An Article.md')
 })
+
+test('a book highlight keeps its author and title apart for group headings', () => {
+  const book = { path: 'Library/Books/Karen Jobes, Esther.md', cache: { frontmatter: { title: 'Esther' } } }
+  const record = project({ book: '[[Karen Jobes, Esther]]', authors: ['[[Karen Jobes]]'] }, book)
+  assert.equal(record.author, 'Karen Jobes')
+  assert.equal(record.title, 'Esther')
+  const untitled = project({ book: '[[Karen Jobes, Esther]]', authors: ['[[Karen Jobes]]'] }, { path: book.path, cache: { frontmatter: {} } })
+  assert.equal(untitled.title, 'Esther')
+  assert.equal(project({ title: 'An Article', authors: ['John Piper'] }, null).title, 'An Article')
+  assert.equal(record.sourceType, 'book')
+  assert.equal(project({ title: 'A Sermon', type: 'Sermon' }, null).sourceType, 'sermon')
+  assert.equal(project({ title: 'Untyped' }, null).sourceType, null)
+})
