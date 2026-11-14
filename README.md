@@ -27,6 +27,10 @@ Favorites and Illustrations are independent filters. If you select both filters,
 
 Use the separate ribbon buttons to open the Scripture and Tag views. You can also open each view from the command palette. Each view remains in the sidebar until you close it.
 
+## Appearance
+
+Ditto follows your theme's colors and fonts in light and dark mode. With the [Style Settings](https://github.com/mgmeyers/obsidian-style-settings) plugin you can adjust its fonts, text sizes, spacing, control heights and colors under **Ditto**.
+
 ## Data and privacy
 
 Ditto reads highlight metadata and the body text for visible results from your vault. It does not send vault content to a server. It does not change your notes.
