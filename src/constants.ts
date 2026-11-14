@@ -1,4 +1,5 @@
-export const VIEW_TYPE = 'study-highlights-view';
+// Keep Ditto's view distinct from the older Study Highlights plugin.
+export const VIEW_TYPE = 'ditto-scripture-highlights-view';
 export const TAG_VIEW_TYPE = 'ditto-tag-highlights-view';
 
 export const BIBLE_BOOK_ABBREVIATIONS: Record<string, string> = {
